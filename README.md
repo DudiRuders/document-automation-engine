@@ -1,4 +1,4 @@
-# A.E.R.I — Automation Map (n8n)
+# A.A.P.W — Automation Map
 
 Publiczna dokumentacja architektury i przepływu automatyzacji.  
 Repo nie zawiera workflow produkcyjnych ani sekretów.
