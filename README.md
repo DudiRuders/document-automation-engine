@@ -25,7 +25,7 @@ Workflow w n8n automatyzuje generowanie dokumentów promocyjnych:
 - (opcjonalnie) własna usługa renderująca DOCX
 
 ## Bezpieczeństwo
-Repo zawiera wersję “sanitized” — bez sekretów. Wstaw swoje credentials w n8n.
+Repo zawiera wersję “sanitized” bez sekretów. Wstaw swoje credentials w n8n.
 
 ## Backend 
 (coming soon) – repo workflow + dokumentacja, a serwis renderujący
