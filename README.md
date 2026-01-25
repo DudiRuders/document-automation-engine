@@ -12,7 +12,7 @@ Workflow w n8n automatyzuje generowanie dokumentów promocyjnych:
 - aktualizuje status w Airtable (Work / Done / Error)
 
 ## Workflow
-![Workflow diagram](docs/diagrams/A.A.P.W.png)
+![Workflow diagram](docs/diagrams/A.A.E.P.W.png)
 ## Wymagane integracje
 - n8n
 - Airtable
