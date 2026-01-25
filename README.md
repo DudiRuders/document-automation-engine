@@ -11,12 +11,20 @@ Workflow w n8n automatyzuje generowanie dokumentów promocyjnych:
 - zapisuje pliki do Google Drive
 - aktualizuje status w Airtable (Work / Done / Error)
 
-## Jak uruchomić (high level)
-1. Importuj workflow JSON do n8n (Workflows → Import)
-2. Ustaw credentials: Airtable + Google Drive + ConvertAPI
-3. Skonfiguruj endpoint webhook (np. /generuj)
-4. Wykonaj test na 1 rekordzie
+## Workflow
+  A[Trigger: Cron/Webhook] --> B[Pobierz rekordy z Airtable]
+  B --> C[Walidacja danych + mapowanie pól]
+  C --> D[Pobierz szablon DOCX z Google Drive]
+  D --> E[Render DOCX: /render + /replace-image]
+  E --> F[Konwersja DOCX -> PDF (ConvertAPI)]
+  F --> G[Zapis plików do Google Drive]
+  G --> H[Aktualizacja statusu w Airtable: DONE]
 
+  C -->|błąd danych| X[Log + status ERROR]
+  E -->|błąd renderu| X
+  F -->|błąd konwersji| X
+  G -->|błąd zapisu| X
+  
 ## Wymagane integracje
 - n8n
 - Airtable
