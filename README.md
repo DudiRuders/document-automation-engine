@@ -1,27 +1,35 @@
-# A.A.E.P.W
-Automatyczny Agregator Edytor Plików Word
+# A.E.R.I — Automation Map (n8n)
 
-## Co to robi?
-Workflow w n8n automatyzuje generowanie dokumentów promocyjnych:
-- pobiera dane z Airtable
-- buduje payload (m.in. tabela produktów)
-- pobiera szablony DOCX z Google Drive
-- renderuje DOCX przez usługę HTTP (/render, /replace-image)
-- konwertuje DOCX → PDF (ConvertAPI)
-- zapisuje pliki do Google Drive
-- aktualizuje status w Airtable (Work / Done / Error)
+Publiczna dokumentacja architektury i przepływu automatyzacji.  
+Repo nie zawiera workflow produkcyjnych ani sekretów.
 
-## Workflow
-![Workflow diagram](docs/diagrams/A.A.E.P.W.png)
-## Wymagane integracje
-- n8n
-- Airtable
-- Google Drive
-- ConvertAPI
-- (opcjonalnie) własna usługa renderująca DOCX
+## Mapa workflow
+[![Workflow map](docs/diagrams/workflow-map.png)](docs/diagrams/workflow-map.svg)
 
-## Bezpieczeństwo
-Repo zawiera wersję “sanitized” bez sekretów. Wstaw swoje credentials w n8n.
+## Co robi ten workflow?
+- Trigger uruchamia proces (cron/webhook)
+- Pobranie rekordów z Airtable (status: WORK)
+- Walidacja + mapowanie pól na dokument
+- Render DOCX (podmiana pól + obrazów)
+- Konwersja DOCX → PDF
+- Zapis DOCX/PDF do Google Drive
+- Aktualizacja Airtable: DONE + linki
+- Obsługa błędów: ERROR + log
 
-## Backend 
-(coming soon) – repo workflow + dokumentacja, a serwis renderujący
+## Integracje (bez sekretów)
+- Airtable (źródło danych + statusy)
+- Google Drive (szablony i wyniki)
+- Render service (DOCX templating)
+- ConvertAPI (DOCX → PDF)
+
+## Failure modes (co może się wysypać)
+- brak danych / błędne pola w rekordzie
+- błąd renderowania dokumentu
+- błąd konwersji do PDF
+- błąd zapisu do Drive
+- timeouty HTTP / limity API
+
+## Security
+- Brak tokenów i sekretów w repo
+- Workflow produkcyjny pozostaje prywatny
+- W publicznym repo są tylko diagramy i opis
