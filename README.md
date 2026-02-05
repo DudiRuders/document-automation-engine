@@ -19,8 +19,12 @@ Repo nie zawiera workflow produkcyjnych ani sekretów.
 ## Integracje (bez sekretów)
 - Airtable (źródło danych + statusy)
 - Google Drive (szablony i wyniki)
-- Render service (DOCX templating)
+- Render service (DOCX/PDF) — https://github.com/DudiRuders/AAEPW-render-service
 - ConvertAPI (DOCX → PDF)
+
+## Demo components
+
+* Render service (DOCX/PDF): https://github.com/DudiRuders/AAEPW-render-service
 
 ## Failure modes (co może się wysypać)
 - brak danych / błędne pola w rekordzie
