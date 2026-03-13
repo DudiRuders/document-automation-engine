@@ -33,3 +33,19 @@ This automated engine acts as a bridge between the database (Airtable) and the f
 
 ---
 *Note: This repository publicly showcases the architectural mapping and workflow design. Sensitive credentials, production API keys, and internal business templates have been intentionally omitted for security purposes.*
+
+## 📊 System Architecture
+
+```mermaid
+graph TD
+    A[(Airtable / Database)] -->|Trigger: Status Ready| B[n8n Orchestrator]
+    B -->|Fetch Base Template| C[Google Drive API]
+    B -->|Send JSON Data & Template| D{{DOCX Render API Service}}
+    D -->|Return Generated DOCX| B
+    B -->|Send for Conversion| E[PDF Conversion Service]
+    E -->|Return Final PDF| B
+    B -->|Upload Final File| C
+    B -->|Update Record Status & URL| A
+    
+    style B fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff
+    style D fill:#3b82f6,stroke:#1d4ed8,stroke-width:2px,color:#fff
