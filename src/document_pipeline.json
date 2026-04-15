@@ -1,0 +1,84 @@
+{
+  "name": "Document Automation Engine - Orchestrator",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {"item": [{"mode": "everyMinute"}]},
+        "documentId": { "__rl": true, "value": "baseId", "mode": "list", "cachedResultName": "Contracts Base" },
+        "tableId": { "__rl": true, "value": "tblId", "mode": "list", "cachedResultName": "To Generate" },
+        "triggerField": "Generate_PDF"
+      },
+      "name": "Airtable Trigger",
+      "type": "n8n-nodes-base.airtableTrigger",
+      "position": [0, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            { "name": "client_name", "value": "={{$json[\"fields\"][\"Client Name\"]}}" },
+            { "name": "contract_value", "value": "={{$json[\"fields\"][\"Amount\"]}}" },
+            { "name": "date", "value": "={{$json[\"fields\"][\"Date\"]}}" }
+          ]
+        }
+      },
+      "name": "Map Payload for API",
+      "type": "n8n-nodes-base.set",
+      "position": [250, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.twoj-render-service.com/generate-docx",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "template_id", "value": "contract_v2" },
+            { "name": "data", "value": "={{$json}}" }
+          ]
+        }
+      },
+      "name": "Custom Render API (Node.js)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [500, 300],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "fileContent": "={{$json[\"pdf_buffer\"]}}",
+        "fileName": "=Contract_{{$node[\"Airtable Trigger\"].json[\"fields\"][\"Client Name\"]}}.pdf",
+        "parents": ["drive_folder_id"]
+      },
+      "name": "Upload to Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [750, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "application": "baseId",
+        "table": "tblId",
+        "id": "={{$node[\"Airtable Trigger\"].json[\"id\"]}}",
+        "fields": [
+          { "field": "Status", "value": "Generated" },
+          { "field": "PDF_Link", "value": "={{$json[\"webViewLink\"]}}" }
+        ]
+      },
+      "name": "Airtable Update",
+      "type": "n8n-nodes-base.airtable",
+      "position": [1000, 300],
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Airtable Trigger": { "main": [ [ { "node": "Map Payload for API", "type": "main", "index": 0 } ] ] },
+    "Map Payload for API": { "main": [ [ { "node": "Custom Render API (Node.js)", "type": "main", "index": 0 } ] ] },
+    "Custom Render API (Node.js)": { "main": [ [ { "node": "Upload to Google Drive", "type": "main", "index": 0 } ] ] },
+    "Upload to Google Drive": { "main": [ [ { "node": "Airtable Update", "type": "main", "index": 0 } ] ] }
+  }
+}
